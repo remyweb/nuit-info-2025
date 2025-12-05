@@ -1,3 +1,29 @@
+Concept Général
+La Mission est un jeu éducatif interactif qui sensibilise les utilisateurs à la souveraineté numérique et au logiciel libre. Le joueur explore une carte interactive d'un lycée et doit aider les personnages à résoudre leurs problèmes informatiques.
+
+LEs Personnages (NPCs)
+5 personnages avec des noms façon "Astérix" :
+
+Personnage	Rôle	Problème	Points
+Prof	Enseignant	Mises à jour Windows intempestives	15 pts
+Curiosix	Étudiant	Code source inaccessible (logiciel propriétaire)	15 pts
+Économix	Intendant	Budget licences épuisé (10 000€)	20 pts
+Paniquix	Directrice	Obsolescence programmée (50 PC "trop vieux" pour Windows 11)	25 pts
+Sysadminix	Admin système	Virus et réinstallations constantes	20 pts
+
+Système de Dialogues
+Chaque interaction suit ce schéma :
+
+NPC expose son problème
+Trombony (parodie de Clippy) propose une "solution" absurde et coûteuse 📎
+Tux (le pingouin Linux) explique l'alternative libre
+Choix du joueur : solution propriétaire (échec) vs solution libre (succès + points)
+
+Progression
+Score de souveraineté : max 95 points (15+15+20+25+20)
+Barre de progression visible en haut de l'écran
+Victoire quand tous les marqueurs sont résolus
+
 ![cover](.github/assets/stack.png)
 
 
