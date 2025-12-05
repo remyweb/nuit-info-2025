@@ -19,7 +19,6 @@ const getNPCImage = (type: NPCType): string => {
 };
 
 export function NPCImage({ type, isResolved = false, size = 48, className = '' }: NPCImageProps) {
-  const statusColor = isResolved ? 'border-green-500' : 'border-red-500';
   const statusAnimation = isResolved ? '' : 'animate-pulse';
 
   return (
@@ -29,7 +28,7 @@ export function NPCImage({ type, isResolved = false, size = 48, className = '' }
     >
       
       <div 
-        className={`absolute inset-0 border-[3px] ${statusColor} ${statusAnimation}`}
+        className={`absolute inset-0 ${statusAnimation}`}
         style={{ width: size, height: size }}
       />
       

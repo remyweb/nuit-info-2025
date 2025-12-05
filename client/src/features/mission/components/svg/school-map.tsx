@@ -1,5 +1,7 @@
 import type { Building } from '../../types';
 import { HiddenSnake } from './hidden-snake';
+import treeImage from '/mission/tree.png';
+import buildingImage from '/mission/building.png';
 
 interface SchoolMapSVGProps {
   buildings: Building[];
@@ -8,20 +10,19 @@ interface SchoolMapSVGProps {
 }
 
 export function SchoolMapSVG({ buildings, liberatedBuildings, onBuildingClick }: SchoolMapSVGProps) {
-  const getBuildingColor = (building: Building) => {
-    const isLiberated = liberatedBuildings.includes(building.id);
+  const getBuildingFilter = (building: Building, isLiberated: boolean) => {
+    if (isLiberated) return 'url(#hue-liberated)';
     
-    const colors: Record<string, { normal: string; liberated: string }> = {
-      entrance: { normal: '#fbbf24', liberated: '#86efac' },
-      classroom: { normal: '#f87171', liberated: '#86efac' },
-      computerLab: { normal: '#60a5fa', liberated: '#86efac' },
-      library: { normal: '#c084fc', liberated: '#86efac' },
-      office: { normal: '#fb923c', liberated: '#86efac' },
-      cafeteria: { normal: '#f472b6', liberated: '#86efac' },
+    const filters: Record<string, string> = {
+      entrance: 'url(#hue-yellow)',
+      classroom: 'url(#hue-red)',
+      computerLab: '', // Garde la couleur violette/bleue originale
+      library: 'url(#hue-brown)',
+      office: 'url(#hue-orange)',
+      cafeteria: 'url(#hue-pink)',
     };
     
-    const colorSet = colors[building.type] || colors.classroom;
-    return isLiberated ? colorSet.liberated : colorSet.normal;
+    return filters[building.type] || '';
   };
 
   return (
@@ -37,6 +38,54 @@ export function SchoolMapSVG({ buildings, liberatedBuildings, onBuildingClick }:
         <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
           <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#000" strokeWidth="1" opacity="0.1" />
         </pattern>
+        
+        {/* Jaune/doré - Entrance */}
+        <filter id="hue-yellow" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="hueRotate" values="50" />
+          <feColorMatrix type="saturate" values="1.5" />
+        </filter>
+        
+        {/* Rouge brique - Classroom */}
+        <filter id="hue-red" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="hueRotate" values="-80" />
+          <feColorMatrix type="saturate" values="1.3" />
+        </filter>
+        
+        {/* Marron/bois - Library */}
+        <filter id="hue-brown" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="hueRotate" values="-50" />
+          <feColorMatrix type="saturate" values="0.6" />
+        </filter>
+        
+        {/* Orange vif - Office */}
+        <filter id="hue-orange" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="hueRotate" values="-60" />
+          <feColorMatrix type="saturate" values="2" />
+          <feColorMatrix type="matrix" values="
+            1 0 0 0 0.1
+            0 1 0 0 0
+            0 0 1 0 0
+            0 0 0 1 0
+          "/>
+        </filter>
+        
+        {/* Rose/magenta - Cafeteria */}
+        <filter id="hue-pink" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="hueRotate" values="30" />
+          <feColorMatrix type="saturate" values="1.4" />
+        </filter>
+        
+        {/* Vert - Libéré */}
+        <filter id="hue-liberated" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="hueRotate" values="100" />
+          <feColorMatrix type="saturate" values="1.5" />
+          <feColorMatrix type="matrix" values="
+            1 0 0 0 0
+            0 1.2 0 0 0.1
+            0 0 1 0 0
+            0 0 0 1 0
+          "/>
+        </filter>
       </defs>
       
       
@@ -64,8 +113,9 @@ export function SchoolMapSVG({ buildings, liberatedBuildings, onBuildingClick }:
       </g>
       
       
-      {[
-        { x: 50, y: 50, hasSnake: false },
+      
+        {[
+          { x: 50, y: 50, hasSnake: false },
         { x: 1100, y: 50, hasSnake: false },
         { x: 50, y: 700, hasSnake: true },
         { x: 1100, y: 700, hasSnake: false },
@@ -76,21 +126,23 @@ export function SchoolMapSVG({ buildings, liberatedBuildings, onBuildingClick }:
         tree.hasSnake ? (
           <HiddenSnake key={i} x={tree.x} y={tree.y} />
         ) : (
-          <g key={i} transform={`translate(${tree.x}, ${tree.y})`}>
-            
-            <circle cx="4" cy="4" r="25" fill="#000" />
-            
-            <circle cx="0" cy="0" r="25" fill="#86efac" stroke="#000" strokeWidth="3" />
-            <circle cx="-8" cy="-8" r="15" fill="#4ade80" stroke="#000" strokeWidth="2" />
-            <circle cx="8" cy="-4" r="12" fill="#22c55e" stroke="#000" strokeWidth="2" />
-          </g>
+          <image
+            key={i}
+            href={treeImage}
+            x={tree.x - 40}
+            y={tree.y - 50}
+            width="80"
+            height="100"
+            preserveAspectRatio="xMidYMid meet"
+          />
         )
       ))}
+     
       
       
       {buildings.map((building) => {
-        const color = getBuildingColor(building);
         const isLiberated = liberatedBuildings.includes(building.id);
+        const filter = getBuildingFilter(building, isLiberated);
         
         return (
           <g 
@@ -99,90 +151,34 @@ export function SchoolMapSVG({ buildings, liberatedBuildings, onBuildingClick }:
             onClick={() => onBuildingClick?.(building)}
             style={{ pointerEvents: 'auto' }}
           >
-            
+            {/* Ombre du bâtiment */}
             <rect
               x={building.x + 6}
               y={building.y + 6}
               width={building.width}
               height={building.height}
-              fill="#000"
+              fill="rgba(0,0,0,0.3)"
             />
             
-            
-            <rect
+            {/* Image du bâtiment avec filtre de couleur */}
+            <image
+              href={buildingImage}
               x={building.x}
               y={building.y}
               width={building.width}
               height={building.height}
-              fill={color}
-              stroke="#000"
-              strokeWidth="3"
+              preserveAspectRatio="xMidYMid slice"
+              filter={filter}
             />
             
-            
-            <rect
-              x={building.x}
-              y={building.y}
-              width={building.width}
-              height="16"
-              fill={isLiberated ? '#22c55e' : '#000'}
-            />
-            
-            
-            {Array.from({ length: Math.floor(building.width / 50) }).map((_, i) => (
-              <g key={i}>
-                
-                <rect
-                  x={building.x + 17 + i * 50}
-                  y={building.y + 32}
-                  width="28"
-                  height="24"
-                  fill="#000"
-                />
-                
-                <rect
-                  x={building.x + 15 + i * 50}
-                  y={building.y + 30}
-                  width="28"
-                  height="24"
-                  fill={isLiberated ? '#fef08a' : '#fff'}
-                  stroke="#000"
-                  strokeWidth="3"
-                />
-              </g>
-            ))}
-            
-            
+            {/* Étiquette du nom */}
             <g>
-              
-              <rect
-                x={building.x + building.width / 2 - 13}
-                y={building.y + building.height - 38}
-                width="28"
-                height="36"
-                fill="#000"
-              />
-              
-              <rect
-                x={building.x + building.width / 2 - 15}
-                y={building.y + building.height - 40}
-                width="28"
-                height="36"
-                fill={isLiberated ? '#86efac' : '#fff'}
-                stroke="#000"
-                strokeWidth="3"
-              />
-            </g>
-            
-            
-            <g>
-              
               <rect
                 x={building.x + building.width / 2 - 60}
                 y={building.y + building.height + 8}
                 width="120"
                 height="24"
-                fill="#fff"
+                fill="#fef08a"
                 stroke="#000"
                 strokeWidth="2"
               />
@@ -200,12 +196,10 @@ export function SchoolMapSVG({ buildings, liberatedBuildings, onBuildingClick }:
               </text>
             </g>
             
-            
+            {/* Badge libéré */}
             {isLiberated && (
               <g transform={`translate(${building.x + building.width - 20}, ${building.y - 10})`}>
-                
                 <rect x="-11" y="-11" width="26" height="26" fill="#000" />
-                
                 <rect x="-13" y="-13" width="26" height="26" fill="#22c55e" stroke="#000" strokeWidth="3" />
                 <text x="0" y="5" textAnchor="middle" fill="#000" fontSize="16" fontWeight="bold">✓</text>
               </g>

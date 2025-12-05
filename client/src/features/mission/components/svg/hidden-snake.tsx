@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import treeImage from '/mission/tree.png';
 
 interface HiddenSnakeProps {
   x: number;
@@ -21,31 +22,14 @@ export function HiddenSnake({ x, y }: HiddenSnakeProps) {
       onClick={handleClick}
     >
       
-      <rect
+      <image
+        href={treeImage}
         x="-40"
-        y="-30"
+        y="-50"
         width="80"
-        height="60"
-        rx="4"
-        fill="#22c55e"
-        stroke="#000"
-        strokeWidth="3"
+        height="100"
+        preserveAspectRatio="xMidYMid meet"
       />
-      <rect
-        x="-35"
-        y="-25"
-        width="70"
-        height="50"
-        rx="2"
-        fill="#16a34a"
-        stroke="#000"
-        strokeWidth="2"
-      />
-      
-      
-      <ellipse cx="-20" cy="-15" rx="12" ry="8" fill="#4ade80" stroke="#000" strokeWidth="2" />
-      <ellipse cx="20" cy="-10" rx="10" ry="7" fill="#4ade80" stroke="#000" strokeWidth="2" />
-      <ellipse cx="0" cy="10" rx="15" ry="8" fill="#4ade80" stroke="#000" strokeWidth="2" />
       
       
       <g 
