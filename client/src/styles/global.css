@@ -9,6 +9,39 @@
     }
   }
 
+@font-face {
+  font-family: "Web AMI EGA 8x14";
+  src: url("/fonts/web_ami_ega_8x14.woff") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --animate-windows-xp-loader: windows-xp-loader 2.5s steps(20) infinite;
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --font-bios: "Web AMI EGA 8x14", "mono";
+
+  @keyframes windows-xp-loader {
+    0%{
+      transform: translate(-30px);
+    }
+    100%{
+      transform: translate(150px);
+    }
+  }
+
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -127,13 +160,6 @@
   body {
     @apply bg-background text-foreground;
   }
-}
-
-.card-bun:hover ~ * .flow-bun,
-.card-hono:hover ~ * .flow-hono,
-.card-vite:hover ~ * .flow-vite,
-.card-react:hover ~ * .flow-react {
-  opacity: 1 !important;
 }
 
 @keyframes spin {
