@@ -21,7 +21,6 @@
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "test": "turbo test",
-    "postinstall": "turbo build --filter=shared --filter=server",
     "start":"bun ./server/dist/index.js"
   },
   "keywords": [
